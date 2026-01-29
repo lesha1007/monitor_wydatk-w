@@ -125,8 +125,9 @@ Aplikacja wykorzystuje następujące rozwiązania bezpieczeństwa:
 
 ## 📧 Autor
  Oleksii Pavlenko 4A Technikum Nauk Nowoczesnych TerraNova.
-Projekt stworzony na potrzeby kursu/zadania szkolnego.
+Projekt stworzony na potrzeby zadania szkolnego.
 
 ---
 
 **Ostatnia aktualizacja:** 2026-01-29
+
