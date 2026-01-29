@@ -1,0 +1,209 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║             MONITOR WYDATKÓW - INSTRUKCJA INSTALACJI NA WINDOWS                 ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+📋 WYMAGANIA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ XAMPP (pakiet zawierający Apache, MySQL, PHP)
+✓ Przeglądarka internetowa (Chrome, Firefox, Edge, etc.)
+✓ Dostęp do internetu (do pobierania bibliotek Bootstrap i Chart.js z CDN)
+
+
+🚀 KROK 1: POBIERANIE I INSTALACJA XAMPP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Wejdź na stronę: https://www.apachefriends.org/
+2. Kliknij przycisk "Download" (pobierz dla Windows)
+3. Pobierz najnowszą wersję XAMPP (np. XAMPP 8.2)
+4. Po pobraniu, uruchom instalator (.exe)
+5. Zainstaluj w katalogu: C:\xampp (domyślny katalog)
+
+Po instalacji pojawiać się będzie w:
+   C:\xampp\htdocs  ← tutaj będą pliki naszej aplikacji
+
+
+🎯 KROK 2: SKOPIOWANIE PLIKÓW PROJEKTU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Otwórz Eksplorator plików (Windows + E)
+2. Przejdź do: C:\xampp\htdocs\
+3. Utwórz nowy folder: "monitor_wydatkow"
+4. Skopiuj wszystkie pliki projektu do tego folderu:
+   - index.php
+   - db.php
+   - dodaj.php
+   - dane_wykresu.php
+   - setup_baza.php
+   - szczegoly.php
+   - instrukcja_sql.sql
+   - README.md
+
+Ostateczna ścieżka powinna wyglądać:
+   C:\xampp\htdocs\monitor_wydatkow\
+
+
+🔧 KROK 3: URUCHOMIENIE XAMPP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Otwórz: C:\xampp\xampp-control.exe (Centrum Kontroli XAMPP)
+2. Kliknij "Start" obok "Apache" (powinno zmienić kolor na zielony)
+3. Kliknij "Start" obok "MySQL" (powinno zmienić kolor na zielony)
+
+Jeśli port jest zajęty:
+   - Kliknij "Config" obok Apache → zmień port na 8080
+   - W adresach później wpisz: http://localhost:8080/
+
+
+💾 KROK 4: INICJALIZACJA BAZY DANYCH (AUTOMATYCZNIE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Otwórz przeglądarkę (Chrome, Firefox, Edge, etc.)
+2. Wejdź na adres:
+   http://localhost/monitor_wydatkow/setup_baza.php
+   
+   LUB jeśli zmienić port:
+   http://localhost:8080/monitor_wydatkow/setup_baza.php
+
+3. Powinieneś zobaczyć komunikat:
+   ✓ Baza danych 'portfel' została utworzona lub już istnieje
+   ✓ Tabela 'wydatki' została utworzona lub już istnieje
+   
+   Baza danych została pomyślnie zainicjalizowana!
+
+4. Kliknij link "Przejdź do aplikacji" lub wejdź na:
+   http://localhost/monitor_wydatkow/
+
+
+🎨 KROK 5: KORZYSTANIE Z APLIKACJI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Po wejściu na główną stronę zobaczysz:
+
+   [Lewa strona]                    [Prawa strona]
+   └─ Formularz:                   └─ Wykres:
+      • Nazwa wydatku                 Rozkład wydatków
+      • Kwota (zł)                    po kategoriach
+      • Kategoria
+      • Data
+      • Przycisk "Zapisz wydatek"
+
+1. Uzupełnij formularz po lewej stronie:
+   - Nazwa: "Zakupy spożywcze"
+   - Kwota: "150.50"
+   - Kategoria: "Jedzenie"
+   - Data: (będzie ustawiona na dzisiaj)
+
+2. Kliknij "Zapisz wydatek"
+
+3. Po zapisaniu strona się odświeży
+
+4. Wykres po prawej powinien się zaktualizować automatycznie
+
+5. Kliknij "Szczegóły" w górnym rogu aby zobaczyć wszystkie wydatki
+
+
+🔍 KROK 6: ALTERNATYWNA INICJALIZACJA BAZY (MANUALNA VIA phpMyAdmin)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Jeśli setup_baza.php nie zadziałał:
+
+1. Otwórz phpMyAdmin:
+   http://localhost/phpmyadmin
+
+2. Zaloguj się (domyślnie Username: "root", Password: pusta)
+
+3. Kliknij "Nowa" aby stworzyć nową bazę
+
+4. Nazwa bazy: "portfel" (BARDZO WAŻNE!)
+
+5. Collation: "utf8mb4_unicode_ci"
+
+6. Kliknij "Utwórz"
+
+7. Teraz z lewej strony wybierz bazę "portfel"
+
+8. Kliknij kartę "SQL"
+
+9. Skopiuj zawartość pliku: instrukcja_sql.sql
+
+10. Wklej do pola SQL w phpMyAdmin
+
+11. Kliknij "Wykonaj" (Execute)
+
+12. Gotowe! Baza powinna być zainicjalizowana
+
+
+📊 KATEGORIE WYDATKÓW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+W aplikacji dostępne są następujące kategorie:
+
+1. Jedzenie        - zakupy spożywcze, restauracje, dostawy jedzenia
+2. Transport       - benzyna, bilety, taksówka, opłaty parkingowe
+3. Rozrywka        - kino, gry, hobby, imprezy
+4. Rachunki        - czynsz, media, internet, ubezpieczenia
+5. Inne            - pozostałe wydatki
+
+
+🛠️ TROUBLESHOOTING (ROZWIĄZYWANIE PROBLEMÓW)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ PROBLEM: "Strona nie wczytuje się"
+   ROZWIĄZANIE:
+   - Sprawdź czy Apache jest uruchomiony (zielony status w XAMPP Control)
+   - Sprawdź czy wpis URL jest poprawny: http://localhost/monitor_wydatkow/
+   - Jeśli port zmieniony, użyj: http://localhost:8080/monitor_wydatkow/
+
+❌ PROBLEM: "Błąd połączenia z bazą danych"
+   ROZWIĄZANIE:
+   - Sprawdź czy MySQL jest uruchomiony (zielony status w XAMPP Control)
+   - Uruchom ponownie setup_baza.php
+   - Sprawdź czy baza "portfel" istnieje w phpMyAdmin
+
+❌ PROBLEM: "Tabela wydatki nie istnieje"
+   ROZWIĄZANIE:
+   - Uruchom setup_baza.php ponownie
+   - Alternatywnie, użyj phpMyAdmin i wklej zawartość instrukcja_sql.sql
+
+❌ PROBLEM: "Formularz nie wysyła danych"
+   ROZWIĄZANIE:
+   - Otwórz konsolę przeglądarki (F12 → Console)
+   - Sprawdź czy są błędy JavaScript
+   - Sprawdź uprawnienia folderu monitor_wydatkow (pełny dostęp)
+
+❌ PROBLEM: "Wykres nie wyświetla się"
+   ROZWIĄZANIE:
+   - Sprawdź czy masz dostęp do internetu (Chart.js pobiera się z CDN)
+   - Otwórz konsolę przeglądarki (F12 → Console)
+   - Sprawdź czy w dane_wykresu.php są dane w JSON
+
+
+💡 PORADY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Zawsze sprawdzaj konsolę przeglądarki (F12) jeśli coś nie działa
+✓ Po każdej zmianie kodzie PHP przeładuj stronę (F5)
+✓ Jeśli chcesz zmienić hasło MySQL, edytuj db.php
+✓ Kopie zapasowe bazy: File → Export w phpMyAdmin
+✓ Możesz dodawać tyle wydatków ile chcesz - baza je będzie przechowywać
+
+
+📱 DOSTĘP Z INNEGO KOMPUTERA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aby dostęp się aplikacji z innego komputera w sieci:
+
+1. Na komputerze z XAMPP otwórz: C:\xampp\apache\conf\httpd.conf
+2. Szukaj: "Listen 80"
+3. Zmień na: "Listen 0.0.0.0:80"
+4. Restart Apache
+5. Teraz możesz dostać się z innego komputera:
+   http://[IP_KOMPUTERA]/monitor_wydatkow/
+   
+   (zamiast [IP_KOMPUTERA] wstaw rzeczywisty adres IP, np. http://192.168.1.100/monitor_wydatkow/)
+
+
+📞 POTRZEBNA POMOC?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sprawdź:
+1. Dokumentację XAMPP: https://www.apachefriends.org/
+2. Dokumentację PHP: https://www.php.net/manual/
+3. Dokumentację MySQL: https://dev.mysql.com/
+4. Dokumentację Bootstrap: https://getbootstrap.com/
+5. Dokumentację Chart.js: https://www.chartjs.org/
+
+
+═════════════════════════════════════════════════════════════════════════════════
+                    Powodzenia! Miłej pracy z aplikacją! 🎉
+═════════════════════════════════════════════════════════════════════════════════

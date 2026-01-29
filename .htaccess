@@ -1,0 +1,62 @@
+# .htaccess - Konfiguracja Apache dla Monitor Wydatków
+
+# Włącz rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Ustaw bazowy katalog
+    RewriteBase /monitor_wydatkow/
+    
+    # Blokuj dostęp do db.php bezpośrednio
+    RewriteRule ^db\.php$ - [F]
+    
+    # Jeśli plik lub folder nie istnieje, przekieruj do index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . index.php [L]
+</IfModule>
+
+# Bezpieczeństwo - nie pokazuj listy plików
+Options -Indexes
+
+# Ustawienia PHP
+<IfModule mod_php7.module>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_value max_upload_size 10M
+    php_value max_input_vars 10000
+</IfModule>
+
+<IfModule mod_php8.module>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_value max_upload_size 10M
+    php_value max_input_vars 10000
+</IfModule>
+
+# Cachowanie plików statycznych
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+</IfModule>
+
+# Kompresja
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Zabezpieczenie plików
+<FilesMatch "\.(php|sql|conf)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Zezwolenie na dostęp do index.php
+<FilesMatch "^(index|dodaj|dane_wykresu|szczegoly|admin|test_api|setup_baza|api_export)\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
