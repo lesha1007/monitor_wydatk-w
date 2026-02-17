@@ -1,0 +1,190 @@
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                    MONITOR WYDATKÓW - QUICK START                           ║
+║                      Szybki przewodnik (5 minut)                            ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+⚡ 5-MINUTOWY START
+════════════════════════════════════════════════════════════════════════════
+
+1️⃣ XAMPP JUŻ ZAINSTALOWANY?
+   ├─ Jeśli TAK → Idź do kroku 2
+   └─ Jeśli NIE → Pobierz z: https://www.apachefriends.org/
+
+2️⃣ URUCHOMIJ XAMPP
+   ├─ Otwórz: C:\xampp\xampp-control.exe
+   ├─ Kliknij START obok Apache (czekaj aż będzie zielone)
+   ├─ Kliknij START obok MySQL (czekaj aż będzie zielone)
+   └─ Gotowe!
+
+3️⃣ SKOPIUJ PROJEKT
+   ├─ Otwórz: C:\xampp\htdocs\
+   ├─ Utwórz folder: monitor_wydatkow
+   ├─ Skopiuj wszystkie pliki (.php, .sql, .md, .txt)
+   └─ Gotowe!
+
+4️⃣ ZAINICJALIZUJ BAZĘ DANYCH
+   ├─ Otwórz przeglądarkę
+   ├─ Wejdź: http://localhost/monitor_wydatkow/setup_baza.php
+   ├─ Powinien wyświetlić "✓ zainicjalizowana"
+   └─ Kliknij link "Przejdź do aplikacji"
+
+5️⃣ GOTOWE!
+   ├─ Jesteś na stronie głównej
+   ├─ Uzupełnij formularz
+   ├─ Kliknij "Zapisz wydatek"
+   └─ Wykres powinien się zmienić! 🎉
+
+
+📋 GŁÓWNE ADRESY
+════════════════════════════════════════════════════════════════════════════
+
+Aplikacja główna:
+  http://localhost/monitor_wydatkow/
+
+Lista szczegółów:
+  http://localhost/monitor_wydatkow/szczegoly.php
+
+Panel administracyjny:
+  http://localhost/monitor_wydatkow/admin.php
+
+Test konfiguracji:
+  http://localhost/monitor_wydatkow/test_api.php
+
+phpMyAdmin (zarządzanie bazą):
+  http://localhost/phpmyadmin/
+
+
+🎯 NAJPIERW SPRÓBUJ
+════════════════════════════════════════════════════════════════════════════
+
+1. Dodaj kilka wydatków:
+   └─ Nazwa: "Zakupy", Kwota: "100", Kategoria: "Jedzenie", Data: dzisiaj
+   └─ Nazwa: "Benzyna", Kwota: "50", Kategoria: "Transport", Data: dzisiaj
+   └─ Nazwa: "Kino", Kwota: "40", Kategoria: "Rozrywka", Data: dzisiaj
+
+2. Obserwuj wykres - powinien się aktualizować automatycznie
+
+3. Kliknij "Szczegóły" w górnym rogu - zobaczysz listę wszystkich wydatków
+
+4. Kliknij "Panel Admin" - zarządzaj wydatkami
+
+
+❓ NAJPOPULARNIEJSZE PROBLEMY
+════════════════════════════════════════════════════════════════════════════
+
+❌ "Strona się nie ładuje"
+   ✓ Sprawdzić czy Apache i MySQL mają zielony status w XAMPP
+   ✓ Sprawdzić URL: http://localhost/monitor_wydatkow/
+   ✓ Refresh strony (Ctrl+F5)
+
+❌ "Błąd połączenia z bazą danych"
+   ✓ Sprawdzić czy MySQL jest uruchomiony
+   ✓ Otworzyć: http://localhost/monitor_wydatkow/setup_baza.php
+   ✓ Może trzeba inna nazwa użytkownika? Edytuj db.php
+
+❌ "Formularz nic nie robi"
+   ✓ Otworzyć konsolę: F12
+   ✓ Spróbować ponownie
+   ✓ Sprawdzić pliki PHP czy są bez błędów
+
+❌ "Wykres się nie wyświetla"
+   ✓ Sprawdzić czy masz internet (Chart.js pobiera się z CDN)
+   ✓ Sprawdzić czy są błędy w konsoli: F12 → Console
+   ✓ Spróbować: http://localhost/monitor_wydatkow/test_api.php
+
+
+📱 KATEGORIE WYDATKÓW
+════════════════════════════════════════════════════════════════════════════
+
+Available categories:
+  • 🍔 Jedzenie
+  • 🚗 Transport
+  • 🎬 Rozrywka
+  • 💡 Rachunki
+  • 📦 Inne
+
+
+🛠️ JEŚLI XAMPP NIE MASZ
+════════════════════════════════════════════════════════════════════════════
+
+1. Pobierz XAMPP: https://www.apachefriends.org/
+2. Zainstaluj w: C:\xampp
+3. Poczekaj na instalację
+4. Uruchom: C:\xampp\xampp-control.exe
+5. Gotowe, wróć do kroku 2 powyżej
+
+
+⚙️ ALTERNATYWNIE - MANUALNA INICJALIZACJA BAZY
+════════════════════════════════════════════════════════════════════════════
+
+Jeśli setup_baza.php nie zadziała:
+
+1. Otwórz: http://localhost/phpmyadmin
+2. Zaloguj się (Username: root, Password: pusta)
+3. Kliknij "SQL"
+4. Wklej zawartość pliku: instrukcja_sql.sql
+5. Kliknij "Wykonaj"
+6. Gotowe!
+
+
+🎓 ZMIEŃ PARAMETRY POŁĄCZENIA (jeśli trzeba)
+════════════════════════════════════════════════════════════════════════════
+
+Edytuj plik: db.php
+
+Domyślne:
+  $host = 'localhost'
+  $db = 'portfel'
+  $user = 'root'
+  $password = ''
+
+Jeśli masz inne dane MySQL, zmień te zmienne.
+
+
+📊 OBSŁUGIWANE ZAPYTANIA SQL
+════════════════════════════════════════════════════════════════════════════
+
+Wszystkie wydatki:
+  SELECT * FROM wydatki
+
+Wydatki po kategoriach (dla wykresu):
+  SELECT kategoria, SUM(kwota) AS suma FROM wydatki GROUP BY kategoria
+
+Suma wydatków:
+  SELECT SUM(kwota) FROM wydatki
+
+Średnia wydatku:
+  SELECT AVG(kwota) FROM wydatki
+
+
+🔐 BEZPIECZEŃSTWO - CO MASZ OCHRONĘ
+════════════════════════════════════════════════════════════════════════════
+
+✓ SQL Injection - chronione (prepared statements)
+✓ XSS - chronione (htmlspecialchars)
+✓ Walidacja danych - zawsze po stronie serwera
+
+
+💡 PORADY
+════════════════════════════════════════════════════════════════════════════
+
+1. Zawsze sprawdzaj konsolę: F12 → Console
+2. Jeśli coś nie działa, sprawdź: test_api.php
+3. Bazy zapasowe: phpMyAdmin → Export
+4. Możesz dodawać wydatki bez limitu
+5. Wszystkie dane są w bezpiecznej bazie SQL
+
+
+🎉 GRATULACJE!
+════════════════════════════════════════════════════════════════════════════
+
+Twoja aplikacja jest gotowa do użycia!
+
+Jeśli chcesz więcej informacji, przeczytaj:
+  • README.md - Pełna dokumentacja
+  • INSTRUKCJA_WINDOWS.txt - Szczegółowe instrukcje
+  • STRUKTURA_PROJEKTU.txt - Architektura projektu
+
+Powodzenia! 🚀
+
+═════════════════════════════════════════════════════════════════════════════════

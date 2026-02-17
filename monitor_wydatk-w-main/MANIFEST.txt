@@ -1,0 +1,388 @@
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                   MONITOR WYDATKÓW - MANIFEST PROJEKTU                      ║
+║                         Lista wszystkich plików                             ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+📅 Data utworzenia: 29.01.2026
+📌 Wersja: 1.0.0
+🎯 Status: Gotowy do użytku
+
+
+📂 STRUKTURA PROJEKTU
+════════════════════════════════════════════════════════════════════════════
+
+monitor_wydatkow/
+│
+├── 🔴 PLIKI GŁÓWNE (PHP - Backend)
+│   ├── ★ index.php                      (GŁÓWNY - Strona główna z formularzem)
+│   ├── ★ db.php                         (KRYTYCZNE - Połączenie z bazą)
+│   ├── ★ dodaj.php                      (GŁÓWNY - Obsługa formularza POST)
+│   ├── ★ dane_wykresu.php               (API - Dane JSON dla wykresu)
+│   │
+│   ├── szczegoly.php                    (Bonus - Lista wydatków)
+│   ├── admin.php                        (Bonus - Panel administracyjny)
+│   ├── test_api.php                     (Bonus - Testowanie konfiguracji)
+│   ├── setup_baza.php                   (Setup - Inicjalizacja BD)
+│   └── api_export.php                   (API - Eksport wszystkich danych)
+│
+├── 🟢 PLIKI KONFIGURACJI
+│   └── .htaccess                        (Apache - Bezpieczeństwo i routing)
+│
+├── 🔵 PLIKI DOKUMENTACJI
+│   ├── README.md                        (📖 Pełna dokumentacja)
+│   ├── QUICKSTART.txt                   (⚡ Szybki start 5 minut)
+│   ├── INSTRUKCJA_WINDOWS.txt           (🪟 Szczegółowe instrukcje Windows)
+│   ├── STRUKTURA_PROJEKTU.txt           (🏗️ Architektura techniczna)
+│   ├── MANIFEST.txt                     (📋 Ten plik - Lista plików)
+│   ├── package.json                     (📦 Informacja o zależnościach)
+│   └── instrukcja_sql.sql               (🗄️ Skrypty SQL)
+
+
+🔴 PLIKI OBOWIĄZKOWE (3)
+════════════════════════════════════════════════════════════════════════════
+
+1. index.php
+   ├─ Rozmiar: ~5 KB
+   ├─ Linie: ~200
+   ├─ Zawartość:
+   │  • HTML struktura
+   │  • Bootstrap 5.3
+   │  • Canvas element
+   │  • Formularz (5 pól)
+   │  • JavaScript - załadowanie wykresu
+   │  • Fetch API - pobieranie danych
+   │  • Chart.js - rysowanie wykresu
+   ├─ Funkcjonalność:
+   │  ✓ Wyświetlanie interfejsu
+   │  ✓ Formularz do dodawania wydatków
+   │  ✓ Asynchroniczne pobieranie danych
+   │  ✓ Wykres kołowy (pie chart)
+   │  ✓ Responsywny design
+   ├─ Biblioteki:
+   │  • Bootstrap CSS
+   │  • Chart.js
+   │  • Font Awesome
+   │  • Fetch API (wbudowana)
+   └─ Zmienne edytowalne: Brak
+
+2. db.php
+   ├─ Rozmiar: ~1 KB
+   ├─ Linie: ~30
+   ├─ Zawartość:
+   │  • Konfiguracja PDO
+   │  • Parametry połączenia
+   │  • Obsługa wyjątków
+   ├─ Funkcjonalność:
+   │  ✓ Inicjalizacja połączenia z MySQL
+   │  ✓ Ustawienie trybu błędów
+   │  ✓ PDOException catch
+   ├─ Zmienne do edycji:
+   │  • $host = 'localhost'
+   │  • $db = 'portfel'
+   │  • $user = 'root'
+   │  • $password = ''
+   └─ Bezpieczeństwo: PDO + prepared statements
+
+3. dodaj.php
+   ├─ Rozmiar: ~2 KB
+   ├─ Linie: ~60
+   ├─ Zawartość:
+   │  • Obsługa POST
+   │  • Pobranie danych z $_POST
+   │  • Walidacja danych
+   │  • Prepared statements
+   │  • INSERT INTO
+   │  • header() redirect
+   ├─ Funkcjonalność:
+   │  ✓ Odbieranie danych formularza
+   │  ✓ Walidacja (ilość, typ, zakres)
+   │  ✓ Ochrona przed SQL Injection
+   │  ✓ Zapis do bazy
+   │  ✓ Przekierowanie po sukcesie
+   ├─ Walidacja:
+   │  • Wszystkie pola wymagane
+   │  • Kwota > 0
+   │  • Kategoria z białej listy
+   │  • Data w prawidłowym formacie
+   └─ Bezpieczeństwo: Prepared statements, try/catch
+
+
+🟢 PLIKI BONUS (6)
+════════════════════════════════════════════════════════════════════════════
+
+4. dane_wykresu.php
+   ├─ Rozmiar: ~1 KB
+   ├─ Typ: API JSON
+   ├─ Zapytanie SQL: SELECT kategoria, SUM(kwota) AS suma FROM wydatki GROUP BY kategoria
+   ├─ Zwraca: JSON array z kategorią i sumą
+   ├─ Content-Type: application/json
+   └─ HTTP Status: 200 (OK) lub 500 (Error)
+
+5. szczegoly.php
+   ├─ Rozmiar: ~6 KB
+   ├─ Zawartość:
+   │  • Tabela wszystkich wydatków
+   │  • Statystyki ogólne
+   │  • Rozkład po kategoriach
+   │  • Bootstrap table
+   ├─ Funkcjonalność:
+   │  ✓ Wyświetlanie listy wydatków
+   │  ✓ Sortowanie po dacie
+   │  ✓ Obliczanie sum
+   │  ✓ Liczenie rekordów
+   └─ Dostęp: /szczegoly.php
+
+6. admin.php
+   ├─ Rozmiar: ~8 KB
+   ├─ Zawartość:
+   │  • Panel administracyjny
+   │  • Statystyki
+   │  • Rozkład po kategoriach
+   │  • Tabela z opcją usuwania
+   │  • Modal do potwierdzenia
+   │  • Eksport JSON
+   ├─ Funkcjonalność:
+   │  ✓ Zarządzanie wydatkami
+   │  ✓ Usuwanie rekordów
+   │  ✓ Czyszczenie bazy
+   │  ✓ Eksport danych
+   └─ Dostęp: /admin.php
+
+7. test_api.php
+   ├─ Rozmiar: ~5 KB
+   ├─ Zawartość:
+   │  • Test połączenia z BD
+   │  • Informacje serwera
+   │  • Test API dane_wykresu.php
+   │  • Statystyki
+   ├─ Funkcjonalność:
+   │  ✓ Weryfikacja konfiguracji
+   │  ✓ Sprawdzenie dostępnych danych
+   │  ✓ Test na żywo
+   └─ Dostęp: /test_api.php
+
+8. setup_baza.php
+   ├─ Rozmiar: ~2 KB
+   ├─ Zawartość:
+   │  • CREATE DATABASE
+   │  • CREATE TABLE
+   │  • Obsługa istniejących struktur
+   ├─ Funkcjonalność:
+   │  ✓ Automatyczne utworzenie bazy
+   │  ✓ Automatyczne utworzenie tabeli
+   │  ✓ Komunikaty sukcesu/błędu
+   └─ Dostęp: /setup_baza.php (uruchomić raz)
+
+9. api_export.php
+   ├─ Rozmiar: ~1 KB
+   ├─ Typ: API JSON
+   ├─ Zwraca: Wszystkie wydatki w JSON
+   ├─ Wykorzystanie: Eksport danych
+   └─ Dostęp: /api_export.php
+
+
+🔵 PLIKI KONFIGURACJI (1)
+════════════════════════════════════════════════════════════════════════════
+
+10. .htaccess
+    ├─ Rozmiar: ~2 KB
+    ├─ Zawartość:
+    │  • Rewrite engine
+    │  • Ustawienia bezpieczeństwa
+    │  • Blokowanie bezpośredniego dostępu
+    │  • Cachowanie
+    │  • Kompresja
+    ├─ Funkcjonalność:
+    │  ✓ Blokada listy plików
+    │  ✓ Blokada db.php
+    │  ✓ Bezpieczne nagłówki
+    │  ✓ Cachowanie statycznych plików
+    └─ Lokacja: Katalog główny projektu
+
+
+📖 PLIKI DOKUMENTACJI (7)
+════════════════════════════════════════════════════════════════════════════
+
+11. README.md
+    ├─ Rozmiar: ~8 KB
+    ├─ Format: Markdown
+    ├─ Zawartość:
+    │  • Wymagania
+    │  • Instalacja (4 kroki)
+    │  • Struktura plików
+    │  • Struktura bazy
+    │  • Funkcjonalności
+    │  • Bezpieczeństwo
+    │  • Troubleshooting
+    └─ Dla: Użytkowników
+
+12. QUICKSTART.txt
+    ├─ Rozmiar: ~3 KB
+    ├─ Zawartość:
+    │  • Szybki start (5 minut)
+    │  • Główne adresy
+    │  • Najpopularniejsze problemy
+    │  • Kategorie
+    └─ Dla: Pospiechu
+
+13. INSTRUKCJA_WINDOWS.txt
+    ├─ Rozmiar: ~10 KB
+    ├─ Zawartość:
+    │  • Krok po kroku instalacja
+    │  • Pobieranie XAMPP
+    │  • Konfiguracja
+    │  • Troubleshooting
+    │  • ASCII art
+    └─ Dla: Użytkowników Windows
+
+14. STRUKTURA_PROJEKTU.txt
+    ├─ Rozmiar: ~20 KB
+    ├─ Zawartość:
+    │  • Szczegółowa architektura
+    │  • Opisy każdego pliku
+    │  • Przepływ danych
+    │  • Koncepty PHP, SQL, JS
+    │  • Scenariusze testowania
+    │  • Możliwości rozszerzenia
+    └─ Dla: Programistów
+
+15. MANIFEST.txt
+    ├─ Rozmiar: ~10 KB
+    ├─ Zawartość:
+    │  • Lista wszystkich plików (TEN PLIK)
+    │  • Opisy szczegółowe
+    │  • Rozmiary i linie kodu
+    │  • Zmienne edytowalne
+    │  • Funkcjonalność
+    └─ Dla: Audytu projektu
+
+16. package.json
+    ├─ Rozmiar: ~5 KB
+    ├─ Format: JSON
+    ├─ Zawartość:
+    │  • Metadane projektu
+    │  • Zależności (CDN)
+    │  • Skrypty
+    │  • Struktura bazy
+    │  • Cechy
+    │  • URL endpoints
+    └─ Dla: Referencji i dokumentacji
+
+17. instrukcja_sql.sql
+    ├─ Rozmiar: ~2 KB
+    ├─ Zawartość:
+    │  • CREATE DATABASE portfel
+    │  • CREATE TABLE wydatki
+    │  • Przykładowe dane
+    │  • Zapytania pomocnicze
+    ├─ Zastosowanie:
+    │  ✓ Manualna inicjalizacja w phpMyAdmin
+    │  ✓ Backup struktury
+    │  ✓ Reference SQL
+    └─ Format: SQL
+
+
+📊 STATYSTYKA PROJEKTU
+════════════════════════════════════════════════════════════════════════════
+
+Pliki PHP:              9
+  - Obowiązkowe:       3 (index, db, dodaj)
+  - Bonus:             6 (szczegoly, admin, test, setup, api_export, dane_wykresu)
+
+Pliki Konfiguracji:     1 (.htaccess)
+
+Pliki Dokumentacji:     7
+  - Markdown:          1 (README.md)
+  - Text:              6 (TXT)
+  - JSON:              1 (package.json)
+  - SQL:               1 (instrukcja_sql.sql)
+
+RAZEM PLIKÓW:          17+
+
+Całkowita wielkość:     ~80 KB (bez bibliotek CDN)
+Całkowite linie kodu:   ~500 linii PHP
+Całkowite linie docs:   ~1500 linii dokumentacji
+
+
+🎯 GŁÓWNE CECHY PROJEKTU
+════════════════════════════════════════════════════════════════════════════
+
+✓ Formularz z walidacją
+✓ Połączenie PDO z MySQL
+✓ Prepared statements (ochrona SQL Injection)
+✓ Zapisywanie danych (INSERT)
+✓ Pobieranie danych (SELECT, GROUP BY)
+✓ JSON API
+✓ Asynchroniczne pobieranie (Fetch API)
+✓ Wykres kołowy (Chart.js)
+✓ Responsywny design (Bootstrap)
+✓ Statystyki i analizy
+✓ Panel administracyjny
+✓ Eksport danych
+✓ Inicjalizacja automatyczna
+
+
+🔐 BEZPIECZEŃSTWO
+════════════════════════════════════════════════════════════════════════════
+
+✓ PDO Prepared Statements - ochrona przed SQL Injection
+✓ Walidacja danych po stronie serwera
+✓ htmlspecialchars() - ochrona przed XSS
+✓ Białe listy kategorii
+✓ Try/catch bloki
+✓ .htaccess - ochrona plików
+✓ Blokada bezpośredniego dostępu do db.php
+
+
+📈 MOŻLIWOŚCI ROZSZERZENIA
+════════════════════════════════════════════════════════════════════════════
+
+1. Logowanie i rejestracja
+2. Wieloużytkownikowość
+3. Edycja wydatków
+4. Filtrowanie po datach
+5. Wyszukiwanie
+6. Eksport CSV/PDF
+7. Budżet miesięczny
+8. Raporty
+9. Wykresy czasowe
+10. Importowanie z pliku
+
+
+🚀 QUICK START
+════════════════════════════════════════════════════════════════════════════
+
+1. Pobierz XAMPP
+2. Zainstaluj w C:\xampp
+3. Skopiuj projekt do C:\xampp\htdocs\monitor_wydatkow
+4. Uruchom Apache i MySQL
+5. Otwórz: http://localhost/monitor_wydatkow/setup_baza.php
+6. Kliknij "Przejdź do aplikacji"
+7. Gotowe!
+
+
+📝 WERSJONOWANIE
+════════════════════════════════════════════════════════════════════════════
+
+Wersja 1.0.0 (2026-01-29):
+  ✓ Wersja podstawowa
+  ✓ Wszystkie wymagane funkcjonalności
+  ✓ Dokumentacja kompletna
+  ✓ Gotowa do użytku
+
+
+📞 GDZIE SZUKAĆ INFORMACJI
+════════════════════════════════════════════════════════════════════════════
+
+Szybki start?               → QUICKSTART.txt
+Problemy z instalacją?     → INSTRUKCJA_WINDOWS.txt
+Nie rozumiem kodu?         → STRUKTURA_PROJEKTU.txt
+Ogólne informacje?         → README.md
+Wszystkie pliki?           → MANIFEST.txt (ten plik)
+Zależności?                → package.json
+
+
+═════════════════════════════════════════════════════════════════════════════════
+                        Projekt Monitor Wydatków v1.0.0
+                    Gotowy do użytku - 2026-01-29 - Powodzenia!
+═════════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,141 @@
+{
+  "name": "monitor-wydatkow",
+  "version": "1.0.0",
+  "description": "Aplikacja internetowa do ewidencji i wizualizacji wydatków osobistych",
+  "author": "Twoja nazwa",
+  "license": "MIT",
+  "keywords": [
+    "wydatki",
+    "monitor",
+    "finansowy",
+    "bootstrap",
+    "chart.js",
+    "php",
+    "mysql",
+    "xampp"
+  ],
+  "dependencies": {
+    "description": "Poniższe biblioteki są pobierane z CDN (nie trzeba ich instalować)"
+  },
+  "cdn_libraries": {
+    "bootstrap": {
+      "version": "5.3.0",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+      "js": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    },
+    "chart.js": {
+      "version": "3.9.0",
+      "url": "https://cdn.jsdelivr.net/npm/chart.js"
+    },
+    "font-awesome": {
+      "version": "6.4.0",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    }
+  },
+  "requirements": {
+    "server": "Apache 2.4+",
+    "php": "7.4+",
+    "mysql": "5.7+ lub 8.0+",
+    "browser": "Nowoczesna przeglądarka (Chrome, Firefox, Edge, Safari)"
+  },
+  "scripts": {
+    "setup": "Uruchom http://localhost/monitor_wydatkow/setup_baza.php",
+    "start": "Otwórz http://localhost/monitor_wydatkow/",
+    "test": "Otwórz http://localhost/monitor_wydatkow/test_api.php",
+    "admin": "Otwórz http://localhost/monitor_wydatkow/admin.php"
+  },
+  "installation": {
+    "step1": "Pobierz i zainstaluj XAMPP",
+    "step2": "Skopiuj projekt do C:\\xampp\\htdocs\\monitor_wydatkow\\",
+    "step3": "Uruchom Apache i MySQL w XAMPP Control Panel",
+    "step4": "Otwórz http://localhost/monitor_wydatkow/setup_baza.php",
+    "step5": "Gotowe!"
+  },
+  "structure": {
+    "php_files": [
+      "index.php - Strona główna",
+      "db.php - Połączenie z bazą",
+      "dodaj.php - Obsługa formularza",
+      "dane_wykresu.php - API JSON",
+      "szczegoly.php - Lista wydatków",
+      "admin.php - Panel administracyjny",
+      "test_api.php - Test konfiguracji",
+      "setup_baza.php - Inicjalizacja bazy",
+      "api_export.php - Eksport danych"
+    ],
+    "config_files": [
+      ".htaccess - Konfiguracja Apache",
+      "db.php - Konfiguracja połączenia"
+    ],
+    "documentation": [
+      "README.md - Pełna dokumentacja",
+      "QUICKSTART.txt - Szybki start",
+      "INSTRUKCJA_WINDOWS.txt - Instrukcje Windows",
+      "STRUKTURA_PROJEKTU.txt - Dokumentacja techniczna",
+      "package.json - Ten plik",
+      "instrukcja_sql.sql - Skrypty SQL"
+    ]
+  },
+  "database": {
+    "name": "portfel",
+    "table": "wydatki",
+    "fields": {
+      "id": "INT PRIMARY KEY AUTO_INCREMENT",
+      "nazwa": "VARCHAR(100) NOT NULL",
+      "kwota": "DECIMAL(10, 2) NOT NULL",
+      "kategoria": "VARCHAR(50) NOT NULL",
+      "data_wydatku": "DATE NOT NULL",
+      "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    }
+  },
+  "features": [
+    "Dodawanie wydatków z walidacją",
+    "Kategoryzacja wydatków (5 kategorii)",
+    "Wizualizacja danych na wykresie kołowym",
+    "Pobieranie danych asynchroniczne (Fetch API)",
+    "Lista szczegółów wszystkich wydatków",
+    "Panel administracyjny",
+    "Eksport danych",
+    "Responsywny design (Bootstrap)",
+    "Ochrona przed SQL Injection (Prepared Statements)",
+    "Obsługa błędów"
+  ],
+  "security_features": [
+    "Prepared Statements (PDO)",
+    "Walidacja danych po stronie serwera",
+    "htmlspecialchars() dla bezpieczności XSS",
+    "Kategorii z białej listy",
+    "Try/catch dla obsługi błędów",
+    ".htaccess - blokowanie bezpośredniego dostępu do db.php"
+  ],
+  "future_improvements": [
+    "Logowanie i rejestracja użytkowników",
+    "Wieloużytkownikowość",
+    "Edycja istniejących wydatków",
+    "Filtrowanie po datach",
+    "Wyszukiwanie wydatków",
+    "Eksport do CSV/PDF",
+    "Budżet miesięczny",
+    "Raporty",
+    "Wykresy czasowe (trendy)"
+  ],
+  "urls": {
+    "main": "http://localhost/monitor_wydatkow/",
+    "details": "http://localhost/monitor_wydatkow/szczegoly.php",
+    "admin": "http://localhost/monitor_wydatkow/admin.php",
+    "test": "http://localhost/monitor_wydatkow/test_api.php",
+    "phpmyadmin": "http://localhost/phpmyadmin/",
+    "setup": "http://localhost/monitor_wydatkow/setup_baza.php"
+  },
+  "api_endpoints": {
+    "add_expense": "POST /dodaj.php - Dodaj nowy wydatek",
+    "get_chart_data": "GET /dane_wykresu.php - Pobierz dane dla wykresu (JSON)",
+    "export_all": "GET /api_export.php - Eksport wszystkich wydatków (JSON)"
+  },
+  "troubleshooting": {
+    "no_page": "Sprawdź czy Apache jest uruchomiony",
+    "db_error": "Sprawdź czy MySQL jest uruchomiony, uruchom setup_baza.php",
+    "form_not_working": "Otwórz F12 → Console, sprawdź błędy JavaScript",
+    "no_chart": "Sprawdź czy masz internet, Chart.js pobiera się z CDN"
+  }
+}

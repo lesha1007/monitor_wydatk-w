@@ -1,0 +1,465 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║          MONITOR WYDATKÓW - PEŁNA DOKUMENTACJA STRUKTURY PROJEKTU              ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+📁 STRUKTURA PLIKÓW PROJEKTU
+════════════════════════════════════════════════════════════════════════════════
+
+monitor_wydatkow/
+│
+├── 📄 index.php                    ★ GŁÓWNY PLIK - Strona z formularzem i wykresem
+├── 📄 db.php                       ★ POŁĄCZENIE Z BD - Konfiguracja PDO
+├── 📄 dodaj.php                    ★ OBSŁUGA FORMULARZA - Zapis do bazy
+├── 📄 dane_wykresu.php             ★ API JSON - Dane dla wykresu
+│
+├── 📄 szczegoly.php                📊 Lista wydatków z statystykami
+├── 📄 admin.php                    🛠️ Panel administracyjny
+├── 📄 api_export.php               💾 API eksportu wszystkich danych
+├── 📄 test_api.php                 🧪 Testowanie API i konfiguracji
+├── 📄 setup_baza.php               ⚙️ Skrypt inicjalizacji bazy danych
+│
+├── 📝 README.md                    📖 Instrukcje w Markdown
+├── 📝 INSTRUKCJA_WINDOWS.txt       🪟 Szczegółowe instrukcje Windows
+├── 📝 STRUKTURA_PROJEKTU.txt       📋 Ten plik
+└── 📄 instrukcja_sql.sql           🗄️ Skrypty SQL
+
+
+🗄️ BAZA DANYCH
+════════════════════════════════════════════════════════════════════════════════
+
+Baza:       portfel
+Tabela:     wydatki
+
+Pola tabeli wydatki:
+├── id (INT PRIMARY KEY AUTO_INCREMENT)
+│   └─ Unikalny identyfikator rekordu, automatycznie inkrementowany
+│
+├── nazwa (VARCHAR(100) NOT NULL)
+│   └─ Nazwa wydatku (np. "Zakupy spożywcze", max 100 znaków)
+│
+├── kwota (DECIMAL(10,2) NOT NULL)
+│   └─ Kwota wydatku w złotych (np. 150.50)
+│
+├── kategoria (VARCHAR(50) NOT NULL)
+│   └─ Kategoria wydatku: Jedzenie, Transport, Rozrywka, Rachunki, Inne
+│
+├── data_wydatku (DATE NOT NULL)
+│   └─ Data wydatku (format: YYYY-MM-DD)
+│
+└── created_at (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+    └─ Czas dodania rekordu (automatycznie ustawiana)
+
+
+🔧 PLIKI BACKEND (PHP)
+════════════════════════════════════════════════════════════════════════════════
+
+★ db.php - POŁĄCZENIE Z BAZĄ DANYCH
+────────────────────────────────────
+Odpowiedzialność:
+  • Konfiguracja parametrów połączenia (host, użytkownik, hasło, baza)
+  • Inicjalizacja obiektu PDO (PHP Data Objects)
+  • Ustawienie atrybutów PDO (obsługa błędów, format zwracanego wyniku)
+  • Catch wyjątków PDOException
+
+Zmienne do edycji:
+  • $host = 'localhost'        (adres serwera MySQL)
+  • $db = 'portfel'            (nazwa bazy danych)
+  • $user = 'root'             (użytkownik MySQL)
+  • $password = ''             (hasło MySQL)
+
+Zabezpieczenia:
+  ✓ Użycie PDO zamiast mysqli (bardziej bezpieczne)
+  ✓ Obsługa wyjątków
+  ✓ Atrybuty PDO ustawione na ERRMODE_EXCEPTION
+
+
+★ index.php - STRONA GŁÓWNA
+────────────────────────────
+Odpowiedzialność:
+  • Wyświetlanie interfejsu użytkownika (HTML + CSS)
+  • Formularz do dodawania wydatków
+  • Canvas element dla wykresu
+  • JavaScript do pobierania danych asynchronicznie
+
+Sekcje:
+  1. Header - tytuł i link do szczegółów
+  2. Formularz (lewa strona):
+     - Pole tekstowe: nazwa
+     - Pole numeryczne: kwota
+     - Select: kategoria
+     - Input date: data_wydatku
+     - Button: Zapisz wydatek
+  3. Canvas (prawa strona):
+     - Element do rysowania wykresu Chart.js
+  4. JavaScript:
+     - Funkcja zaladujWykres() - asynchroniczne pobieranie danych
+     - Tworzenie wykresu kołowego
+     - Ustawienie domyślnej daty
+
+Biblioteki:
+  • Bootstrap 5.3 (CSS)
+  • Chart.js (wykresy)
+  • Font Awesome (ikony)
+  • Fetch API (komunikacja z serwerem)
+
+
+★ dodaj.php - OBSŁUGA FORMULARZA
+─────────────────────────────────
+Odpowiedzialność:
+  • Odbieranie danych z formularza metodą POST
+  • Walidacja danych po stronie serwera
+  • Zapis do bazy danych
+  • Przekierowanie po pomyślnym zapisie
+
+Kroki:
+  1. Sprawdzenie metody REQUEST (czy POST)
+  2. Pobranie danych z $_POST
+  3. Walidacja:
+     - Czy wszystkie pola są wypełnione
+     - Czy kwota to liczba dodatnia
+     - Czy kategoria jest z listy dozwolonych
+     - Czy data ma prawidłowy format
+  4. Przygotowanie zapytania SQL z parametrami bindowanymi
+  5. Wykonanie za pomocą prepared statement
+  6. Przekierowanie: header('Location: index.php')
+
+Zabezpieczenia:
+  ✓ Walidacja danych
+  ✓ Prepared statements (ochrona przed SQL Injection)
+  ✓ Try/catch bloki dla obsługi błędów
+
+
+★ dane_wykresu.php - API ZWRACAJĄCE DANE JSON
+───────────────────────────────────────────────
+Odpowiedzialność:
+  • Pobieranie danych z bazy pogrupowanych po kategoriach
+  • Zwracanie danych w formacie JSON
+  • Obsługa błędów i zwracanie odpowiednich kodów HTTP
+
+Zapytanie SQL:
+  SELECT kategoria, SUM(kwota) AS suma 
+  FROM wydatki 
+  GROUP BY kategoria 
+  ORDER BY suma DESC
+
+Zwracane dane:
+  [
+    { "kategoria": "Jedzenie", "suma": "345.00" },
+    { "kategoria": "Transport", "suma": "150.00" },
+    ...
+  ]
+
+Content-Type: application/json; charset=utf-8
+HTTP Status: 200 (sukces) lub 500 (błąd)
+
+
+★ szczegoly.php - LISTA I STATYSTYKI WYDATKÓW
+───────────────────────────────────────────────
+Odpowiedzialność:
+  • Wyświetlanie tabeli wszystkich wydatków
+  • Obliczanie statystyk (suma, średnia, liczba)
+  • Grupowanie po kategoriach
+
+Zawartość:
+  1. Tabela z kolumnami: ID, Nazwa, Kategoria, Kwota, Data, Dodano
+  2. Stopa tabeli: RAZEM WYDATKÓW
+  3. Statystyki po kategoriach
+
+
+★ admin.php - PANEL ADMINISTRACYJNY
+──────────────────────────────────
+Odpowiedzialność:
+  • Zarządzanie wydatkami (usuwanie)
+  • Przegląd statystyk
+  • Eksport danych
+  • Czyszczenie bazy
+
+Funkcionalność:
+  • Wyświetlanie ogólnych statystyk (ilość, suma, średnia, min, max)
+  • Rozkład po kategoriach
+  • Tabela z przyciskami usuwania
+  • Modal do potwierdzenia czyszczenia bazy
+  • Eksport do JSON
+
+
+★ test_api.php - TESTOWANIE KONFIGURACJI
+──────────────────────────────────────────
+Odpowiedzialność:
+  • Weryfikacja połączenia z bazą
+  • Sprawdzenie dostępnych danych
+  • Test API dane_wykresu.php
+  • Informacje o serwerze
+
+Przydatne do debugowania!
+
+
+★ setup_baza.php - INICJALIZACJA BAZY DANYCH
+──────────────────────────────────────────────
+Odpowiedzialność:
+  • Automatyczne utworzenie bazy danych "portfel"
+  • Utworzenie tabeli "wydatki" z wszystkimi polami
+  • Obsługa istniejących struktur (IF NOT EXISTS)
+
+Uruchomić raz na początku:
+  http://localhost/monitor_wydatkow/setup_baza.php
+
+
+★ api_export.php - EKSPORT DANYCH
+──────────────────────────────────
+Odpowiedzialność:
+  • Zwracanie WSZYSTKICH wydatków w JSON
+  • Wykorzystywany przez funkcję eksportu w admin.php
+
+
+🎨 FRONTEND - HTML, CSS, JAVASCRIPT
+════════════════════════════════════════════════════════════════════════════════
+
+Bootstrap 5.3
+─────────────
+Wykorzystane komponenty:
+  • Grid system (container, row, col-*)
+  • Card component
+  • Button styles
+  • Form controls (input, select, etc.)
+  • Badge
+  • Alert
+  • Table
+  • Modal
+  • Responsive design
+
+Klasy dostosowane:
+  • .header - gradient tła
+  • .card-form - efekt cienia
+  • .chart-container - kontener wykresu
+  • .btn-submit - przycisk submit
+
+
+Chart.js
+────────
+Typ wykresu: Pie (kołowy)
+
+Dane do wykresu:
+  • Labels: kategorie wydatków
+  • Data: sumy wydatków dla każdej kategorii
+  • Colors: unikatowe kolory dla każdej kategorii
+  • Display: procenty i wartości w tooltip
+
+Opcje:
+  • responsive: true
+  • maintainAspectRatio: false
+  • legend na dole
+  • Custom tooltip callbacks
+
+
+JavaScript / Fetch API
+──────────────────────
+Funkcja zaladujWykres():
+  1. fetch('dane_wykresu.php')
+  2. Konwersja odpowiedzi na JSON
+  3. Mapowanie danych
+  4. Tworzenie instancji Chart
+  5. Obsługa błędów
+
+Event listeners:
+  • DOMContentLoaded - załadowanie wykresu
+  • DOMContentLoaded - ustawienie dzisiejszej daty
+
+
+📊 PRZEPŁYW DANYCH
+════════════════════════════════════════════════════════════════════════════════
+
+DODAWANIE WYDATKU:
+─────────────────
+User (formularz)
+    ↓
+    POST data → dodaj.php
+    ↓
+    Walidacja → prepared statement
+    ↓
+    INSERT INTO wydatki
+    ↓
+    header() → index.php
+    ↓
+    Strona przeładowana
+    ↓
+    Automatyczne pobranie danych → dane_wykresu.php
+    ↓
+    Wykres zaktualizowany
+
+
+WYŚWIETLANIE WYKRESU:
+─────────────────────
+1. Załadowanie index.php
+2. Document ready
+3. zaladujWykres() - fetch
+4. dane_wykresu.php → JSON
+5. Parsing danych
+6. Chart.js - rysowanie wykresu
+
+
+BEZPIECZEŃSTWO
+════════════════════════════════════════════════════════════════════════════════
+
+✓ SQL Injection - ochrona za pomocą prepared statements (PDO)
+✓ XSS - htmlspecialchars() przy wyświetlaniu danych
+✓ CSRF - brak potrzeby tokenów (GET/POST są prywatne)
+✓ Walidacja danych po stronie serwera
+✓ Obsługa błędów bez ujawniania szczegółów technicznych
+
+
+🔍 PRZYKŁADOWE SCENARIUSZE TESTOWANIA
+════════════════════════════════════════════════════════════════════════════════
+
+Test 1: Podstawowy przepływ
+──────────────────────────
+1. Otwórz http://localhost/monitor_wydatkow/
+2. Uzupełnij formularz
+3. Kliknij "Zapisz wydatek"
+4. Sprawdź czy strona się przeładowała
+5. Sprawdź czy wykres się zmienił
+
+Test 2: Walidacja formularza
+───────────────────────────
+1. Spróbuj wysłać pusty formularz
+2. Spróbuj wprowadzić ujemną kwotę
+3. Spróbuj wybrać kategorię "-- Wybierz kategorię --"
+4. Spróbuj wprowadzić tekstową kwotę
+
+Test 3: Baza danych
+──────────────────
+1. Otwórz phpMyAdmin: http://localhost/phpmyadmin
+2. Zaloguj się (root, bez hasła)
+3. Wybierz bazę "portfel"
+4. Sprawdź tabelę "wydatki"
+5. Pobierz dane wszystkich wydatków
+
+Test 4: API
+──────────
+1. Otwórz http://localhost/monitor_wydatkow/dane_wykresu.php
+2. Powinna wyświetlić się tablica JSON z danymi
+3. Otwórz konsolę (F12 → Console)
+4. Wklej: fetch('dane_wykresu.php').then(r=>r.json()).then(d=>console.log(d))
+
+Test 5: Test API strona
+──────────────────────
+1. Otwórz http://localhost/monitor_wydatkow/test_api.php
+2. Sprawdź czy wszystkie statusy są zielone
+3. Sprawdź czy tabela zawiera dodane wydatki
+
+Test 6: Panel Admin
+──────────────────
+1. Otwórz http://localhost/monitor_wydatkow/admin.php
+2. Sprawdź statystyki
+3. Sprawdź rozkład po kategoriach
+4. Spróbuj usunąć jeden wydatek
+5. Spróbuj wyeksportować dane
+
+
+⚠️ ZNANE OGRANICZENIA I MOŻLIWOŚCI ROZSZERZENIA
+════════════════════════════════════════════════════════════════════════════════
+
+Bieżące ograniczenia:
+  • Brak uwierzytelniania użytkowników (logowania)
+  • Brak rozdzielenia danych między użytkownikami
+  • Brak edycji istniejących wydatków (tylko usuwanie)
+  • Brak filtrowania po datach
+  • Brak wyszukiwania
+  • Brak eksportu do CSV
+  • Brak wiadomości e-mail o przypomnieniach
+
+Możliwości rozszerzenia:
+  ✓ Dodanie logowania i rejestracji
+  ✓ Wieloużytkownikowość (kolumna user_id)
+  ✓ Edycja wydatków
+  ✓ Filtrowanie po datach (od... do...)
+  ✓ Wyszukiwanie
+  ✓ Eksport do CSV, PDF, Excel
+  ✓ Budżet miesięczny i powiadomienia
+  ✓ Wykresy czasowe (trendy)
+  ✓ Kategoryzacja przez tagi
+  ✓ Importowanie z pliku
+
+
+📝 NAZEWNICTWO ZMIENNYCH I KONWENCJE KODOWANIA
+════════════════════════════════════════════════════════════════════════════════
+
+PHP:
+  • $zmienne_w_dolnych_literach_z_podkreslnikami
+  • function_name() - funkcje w dolnych literach z podkreślnikami
+  • $pdo - obiekt połączenia z bazą
+  • $stmt - prepared statement
+  • $_POST, $_GET - zmienne superglobalne
+
+JavaScript:
+  • zmiennaCamelCase - zmienne
+  • functionName() - funkcje
+  • const, let zamiast var
+  • async/await zamiast promises (jeśli możliwe)
+
+HTML:
+  • id="element-id" - IDs z myślnikami
+  • class="multiple classes" - klasy z myślnikami
+  • data-* atrybuty dla przechowywania danych
+
+Baza danych:
+  • tabela_nazwa - tabele w dolnych literach z podkreślnikami
+  • pole_nazwa - pola w dolnych literach z podkreślnikami
+  • kolumny typu tekstu: VARCHAR, TEXT
+  • kolumny liczbowe: INT, DECIMAL, FLOAT
+
+
+🎓 LEKCJE I KONCEPTY WYKORZYSTANE W PROJEKCIE
+════════════════════════════════════════════════════════════════════════════════
+
+PHP:
+  ✓ require_once - dołączanie pliku
+  ✓ $_SERVER - dostęp do informacji serwera
+  ✓ $_POST, $_GET - pobranie danych z formularza
+  ✓ try/catch - obsługa wyjątków
+  ✓ header() - przekierowanie
+  ✓ json_encode() - konwersja do JSON
+  ✓ number_format() - formatowanie liczb
+  ✓ htmlspecialchars() - bezpieczne wyświetlanie HTML
+
+PDO:
+  ✓ new PDO() - inicjalizacja
+  ✓ $pdo->prepare() - prepared statement
+  ✓ $stmt->execute() - wykonanie z parametrami
+  ✓ $stmt->fetch() - pobranie jednego wiersza
+  ✓ $stmt->fetchAll() - pobranie wszystkich wierszy
+  ✓ $pdo->query() - szybkie zapytanie
+  ✓ PDOException - obsługa błędów
+
+SQL:
+  ✓ CREATE DATABASE
+  ✓ CREATE TABLE
+  ✓ INSERT INTO
+  ✓ SELECT
+  ✓ WHERE
+  ✓ GROUP BY
+  ✓ ORDER BY
+  ✓ SUM() - funkcja agregująca
+  ✓ PRIMARY KEY
+  ✓ AUTO_INCREMENT
+  ✓ NOT NULL
+  ✓ DEFAULT
+
+HTML/CSS:
+  ✓ Semantic HTML
+  ✓ Bootstrap grid system
+  ✓ Form controls
+  ✓ Bootstrap components
+  ✓ Custom CSS z gradientem
+
+JavaScript:
+  ✓ async/await
+  ✓ fetch API
+  ✓ DOM manipulation
+  ✓ Event listeners
+  ✓ Array methods (map)
+  ✓ Chart.js API
+
+
+═════════════════════════════════════════════════════════════════════════════════
+                    Koniec dokumentacji struktury projektu
+═════════════════════════════════════════════════════════════════════════════════
